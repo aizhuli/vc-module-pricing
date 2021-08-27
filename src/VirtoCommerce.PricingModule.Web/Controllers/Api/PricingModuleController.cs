@@ -8,6 +8,7 @@ using VirtoCommerce.CatalogModule.Core.Model;
 using VirtoCommerce.CatalogModule.Core.Services;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.PricingModule.Core;
 using VirtoCommerce.PricingModule.Core.Model;
 using VirtoCommerce.PricingModule.Core.Model.Conditions;
@@ -24,20 +25,37 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         private readonly IPricingSearchService _pricingSearchService;
         private readonly IItemService _itemService;
         private readonly IBlobUrlResolver _blobUrlResolver;
-
+        private readonly ICrudService<Price> _priceCrudService;
+        private readonly ICrudService<Pricelist> _pricelistCrudService;
+        private readonly ICrudService<PricelistAssignment> _pricelistAssignmentCrudService;
+        private readonly ISearchService<PricesSearchCriteria, PriceSearchResult, Price> _priceSearchService;
+        private readonly ISearchService<PricelistSearchCriteria, PricelistSearchResult, Pricelist> _pricelistSearchService;
+        private readonly ISearchService<PricelistAssignmentsSearchCriteria, PricelistAssignmentSearchResult, PricelistAssignment> _pricelistAssignmentSearchService;
 
         public PricingModuleController(
             IPricingService pricingService
             , IItemService itemService
             , IPricingSearchService pricingSearchService
-            , IBlobUrlResolver blobUrlResolver)
+            , IBlobUrlResolver blobUrlResolver
+            , IPriceService priceService
+            , IPriceSearchService priceSearchService
+            , IPricelistService pricelistService
+            , IPricelistSearchService pricelistSearchService
+            , IPricelistAssignmentService pricelistAssignmentService
+            , IPricelistAssignmentSearchService pricelistAssignmentSearchService)
         {
             _pricingService = pricingService;
             _itemService = itemService;
             _pricingSearchService = pricingSearchService;
             _blobUrlResolver = blobUrlResolver;
+            _priceSearchService = (ISearchService<PricesSearchCriteria, PriceSearchResult, Price>)priceSearchService;
+            _pricelistSearchService = (ISearchService<PricelistSearchCriteria, PricelistSearchResult, Pricelist>)pricelistSearchService;
+            _pricelistAssignmentSearchService = (ISearchService<PricelistAssignmentsSearchCriteria, PricelistAssignmentSearchResult, PricelistAssignment>)pricelistAssignmentSearchService;
+            _priceCrudService = (ICrudService<Price>)priceService;
+            _pricelistCrudService = (ICrudService<Pricelist>)pricelistService;
+            _pricelistAssignmentCrudService = (ICrudService<PricelistAssignment>)pricelistAssignmentService;
         }
-
+        
         /// <summary>
         /// Evaluate prices by given context
         /// </summary>
@@ -73,7 +91,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         [Route("api/pricing/assignments/{id}")]
         public async Task<ActionResult<PricelistAssignment>> GetPricelistAssignmentById(string id)
         {
-            var assignment = (await _pricingService.GetPricelistAssignmentsByIdAsync(new[] { id })).FirstOrDefault();
+            var assignment = (await _pricelistAssignmentCrudService.GetByIdsAsync(new[] { id })).FirstOrDefault();
             if (assignment != null)
             {
                 assignment.DynamicExpression?.MergeFromPrototype(AbstractTypeFactory<PriceConditionTreePrototype>.TryCreateInstance());
@@ -109,7 +127,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             {
                 criteria = new PricelistSearchCriteria();
             }
-            var result = await _pricingSearchService.SearchPricelistsAsync(criteria);
+            var result = await _pricelistSearchService.SearchAsync(criteria);
             return Ok(result);
         }
 

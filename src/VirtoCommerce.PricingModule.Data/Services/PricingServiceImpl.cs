@@ -10,6 +10,7 @@ using VirtoCommerce.CatalogModule.Core.Services;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.PricingModule.Core.Events;
 using VirtoCommerce.PricingModule.Core.Model;
@@ -28,6 +29,9 @@ namespace VirtoCommerce.PricingModule.Data.Services
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly IEventPublisher _eventPublisher;
         private readonly IPricingPriorityFilterPolicy _pricingPriorityFilterPolicy;
+        private readonly ICrudService<Price> _priceService;
+        private readonly ICrudService<Pricelist> _pricelistService;
+        private readonly ICrudService<PricelistAssignment> _pricelistAssignmentService;
 
         public PricingServiceImpl(
             Func<IPricingRepository> repositoryFactory
@@ -35,7 +39,10 @@ namespace VirtoCommerce.PricingModule.Data.Services
             , ILogger<PricingServiceImpl> logger
             , IPlatformMemoryCache platformMemoryCache
             , IEventPublisher eventPublisher
-            , IPricingPriorityFilterPolicy pricingPriorityFilterPolicy)
+            , IPricingPriorityFilterPolicy pricingPriorityFilterPolicy
+            , IPriceService priceService
+            , IPricelistService pricelistService
+            , IPricelistAssignmentService pricelistAssignmentService)
         {
             _repositoryFactory = repositoryFactory;
             _productService = productService;
@@ -43,6 +50,9 @@ namespace VirtoCommerce.PricingModule.Data.Services
             _platformMemoryCache = platformMemoryCache;
             _eventPublisher = eventPublisher;
             _pricingPriorityFilterPolicy = pricingPriorityFilterPolicy;
+            _priceService = (ICrudService<Price>)priceService;
+            _pricelistService = (ICrudService<Pricelist>)pricelistService;
+            _pricelistAssignmentService = (ICrudService<PricelistAssignment>)pricelistAssignmentService;
         }
 
         #region IPricingService Members
