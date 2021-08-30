@@ -29,9 +29,6 @@ namespace VirtoCommerce.PricingModule.Data.Services
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly IEventPublisher _eventPublisher;
         private readonly IPricingPriorityFilterPolicy _pricingPriorityFilterPolicy;
-        private readonly ICrudService<Price> _priceService;
-        private readonly ICrudService<Pricelist> _pricelistService;
-        private readonly ICrudService<PricelistAssignment> _pricelistAssignmentService;
 
         public PricingServiceImpl(
             Func<IPricingRepository> repositoryFactory
@@ -39,10 +36,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
             , ILogger<PricingServiceImpl> logger
             , IPlatformMemoryCache platformMemoryCache
             , IEventPublisher eventPublisher
-            , IPricingPriorityFilterPolicy pricingPriorityFilterPolicy
-            , IPriceService priceService
-            , IPricelistService pricelistService
-            , IPricelistAssignmentService pricelistAssignmentService)
+            , IPricingPriorityFilterPolicy pricingPriorityFilterPolicy)
         {
             _repositoryFactory = repositoryFactory;
             _productService = productService;
@@ -50,9 +44,6 @@ namespace VirtoCommerce.PricingModule.Data.Services
             _platformMemoryCache = platformMemoryCache;
             _eventPublisher = eventPublisher;
             _pricingPriorityFilterPolicy = pricingPriorityFilterPolicy;
-            _priceService = (ICrudService<Price>)priceService;
-            _pricelistService = (ICrudService<Pricelist>)pricelistService;
-            _pricelistAssignmentService = (ICrudService<PricelistAssignment>)pricelistAssignmentService;
         }
 
         #region IPricingService Members

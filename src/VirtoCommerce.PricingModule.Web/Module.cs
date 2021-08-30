@@ -58,6 +58,7 @@ namespace VirtoCommerce.PricingModule.Web
             serviceCollection.AddTransient<Func<IPricelistRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetRequiredService<IPricelistRepository>());
             serviceCollection.AddTransient<IPriceRepository, PriceRepository>();
             serviceCollection.AddTransient<Func<IPricelistAssignmentRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetRequiredService<IPricelistAssignmentRepository>());
+            serviceCollection.AddTransient<IPricelistAssignmentRepository, PricelistAssignmentRepository>();
 
             serviceCollection.AddTransient<IPricingService, PricingServiceImpl>();
             serviceCollection.AddTransient<IPricingSearchService, PricingSearchServiceImpl>();

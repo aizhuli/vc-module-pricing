@@ -7,10 +7,12 @@ using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.CatalogModule.Core.Model;
 using VirtoCommerce.CatalogModule.Core.Model.Search;
 using VirtoCommerce.CatalogModule.Core.Search;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Data.GenericCrud;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.PricingModule.Core.Model;
 using VirtoCommerce.PricingModule.Core.Model.Search;
 using VirtoCommerce.PricingModule.Core.Services;
@@ -38,13 +40,14 @@ namespace VirtoCommerce.PricingModule.Data.Services
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
             return _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
-                cacheEntry.AddExpirationToken(PricesCacheRegion.CreateChangeToken());
-                cacheEntry.AddExpirationToken(PricingSearchCacheRegion.CreateChangeToken());
-
+                cacheEntry.AddExpirationToken(GenericCachingRegion<Price>.CreateChangeToken());
+                cacheEntry.AddExpirationToken(GenericSearchCachingRegion<Price>.CreateChangeToken());
+                
                 var result = AbstractTypeFactory<PriceSearchResult>.TryCreateInstance();
 
                 using (var repository = _repositoryFactory())
                 {
+                    repository.DisableChangesTracking();
                     var query = await BuildQueryAsync(repository, criteria);
                     var sortInfos = BuildSortExpression(criteria);
                     //Try to replace sorting columns names
@@ -77,7 +80,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
                                                     .AsNoTracking()
                                                     .ToArrayAsync();
 
-                        var unorderedResults = await _crudService.GetByIdsAsync((IEnumerable<string>)priceIds);
+                        var unorderedResults = await _crudService.GetByIdsAsync(priceIds);
                         result.Results = unorderedResults.OrderBy(x => Array.IndexOf(priceIds, x.Id)).ToList();
                     }
                 }

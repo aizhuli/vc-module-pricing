@@ -20,9 +20,16 @@ namespace VirtoCommerce.PricingModule.Data.Services
         {
         }
 
+        public string GetDefaultPriceListName(string currency)
+        {
+            var retVal = "Default" + currency;
+            return retVal;
+        }
+
         protected override Task<IEnumerable<PricelistEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids, string responseGroup)
         {
             return ((IPricelistRepository)repository).GetByIdsAsync(ids);
         }
+
     }
 }
