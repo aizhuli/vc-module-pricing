@@ -22,7 +22,6 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
     public class PricingModuleController : Controller
     {
         private readonly IItemService _itemService;
-        private readonly IPricingSearchService _pricingSearchService;
         private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly IPriceService _priceService;
         private readonly IPricelistService _pricelistService;
@@ -35,7 +34,6 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             IItemService itemService
             , IBlobUrlResolver blobUrlResolver
             , IPriceService priceService
-            , IPricingSearchService pricingSearchService
             , IPriceSearchService priceSearchService
             , IPricelistService pricelistService
             , IPricelistSearchService pricelistSearchService
@@ -43,7 +41,6 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             , IPricelistAssignmentSearchService pricelistAssignmentSearchService)
         {
             _itemService = itemService;
-            _pricingSearchService = pricingSearchService;
             _blobUrlResolver = blobUrlResolver;
             _priceSearchService = (ISearchService<PricesSearchCriteria, PriceSearchResult, Price>)priceSearchService;
             _pricelistSearchService = (ISearchService<PricelistSearchCriteria, PricelistSearchResult, Pricelist>)pricelistSearchService;

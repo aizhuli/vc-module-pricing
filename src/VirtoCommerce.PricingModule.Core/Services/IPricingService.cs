@@ -5,9 +5,9 @@ using VirtoCommerce.PricingModule.Core.Model;
 
 namespace VirtoCommerce.PricingModule.Core.Services
 {
+    [Obsolete(@"Need to remove after inheriting IPriceService, IPricelistService, and IPricelistAssignmentService from ICrudService.")]
     public interface IPricingService
-    {
-        [Obsolete(@"Need to remove after inheriting IPriceService, IpricelistService, and IPricelistAssignment from ICrudService.")]
+    {        
         Task<Price[]> GetPricesByIdAsync(string[] ids);
         Task<Pricelist[]> GetPricelistsByIdAsync(string[] ids);
         Task<PricelistAssignment[]> GetPricelistAssignmentsByIdAsync(string[] ids);
