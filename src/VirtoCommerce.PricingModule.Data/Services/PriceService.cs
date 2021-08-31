@@ -38,7 +38,8 @@ namespace VirtoCommerce.PricingModule.Data.Services
             _pricelistService = pricelistService;
         }
 
-        public virtual async Task SavePricesAsync(Price[] prices)
+
+        public override async Task SaveChangesAsync(IEnumerable<Price> prices)
         {
             var pkMap = new PrimaryKeyResolvingMap();
             var changedEntries = new List<GenericChangedEntry<Price>>();

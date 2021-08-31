@@ -1,9 +1,6 @@
 using System;
 using VirtoCommerce.CatalogModule.Core.Services;
 using VirtoCommerce.ExportModule.Core.Model;
-using VirtoCommerce.Platform.Core.GenericCrud;
-using VirtoCommerce.PricingModule.Core.Model;
-using VirtoCommerce.PricingModule.Core.Model.Search;
 using VirtoCommerce.PricingModule.Core.Services;
 
 namespace VirtoCommerce.PricingModule.Data.ExportImport
